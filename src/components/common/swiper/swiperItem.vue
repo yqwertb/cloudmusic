@@ -38,6 +38,7 @@ export default {
   width: 60%;
 }
 .item-img img {
-  width: 100%;
+  width: 530px;
+  height: 195px;
 }
 </style>

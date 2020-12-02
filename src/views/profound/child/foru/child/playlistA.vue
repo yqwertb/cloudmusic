@@ -6,12 +6,16 @@
         <router-link to="/home/forU" class="header-right-a">更多</router-link>
       </div>
     </div>
-    <div class="playlist-content">
+    <div class="playlist-content" @click="pushRoute($event)">
       <div class="content-item" v-for="(item, index) in recommendList" 
         :key="index">
-        <div class="item-main"
-          :style="{background: 'url(' + item.picUrl + 'cover'+')'}">
-          <div class="top-text">{{item.copywriter}}</div>
+        <input style="display: none" :value="item.id">
+        <div class="item-main">
+          <!-- class="default-bg" -->
+          <img :src="picUrl">
+        <!-- <div class="item-main"
+          :style="{background: 'url(' + item.picUrl +')'}"> -->
+          <div class="top-text"><span>{{item.copywriter}}</span></div>
           <div class="play-count">
             <i class="iconfont icon-headphones"></i>
             <span class="count">{{getPlaycount(item)}}</span>
@@ -27,6 +31,7 @@
 </template>
 
 <script>
+import loadingGif from '../../../../../assets/img/loading.gif'
 export default {
   name: 'playListA',
   props: {
@@ -36,15 +41,43 @@ export default {
   },
   data() {
     return {
-
+      picUrl: loadingGif
+    }
+  },
+  watch: {
+    recommendList: {
+      handler: function() {
+        this.$nextTick(() => {
+          this.getImg()
+        })
+      },
+      immediate: true
     }
   },
   created() {
+  },
+  mounted() {
 
   },
   computed: {
+    getBgi() {
+      return loadingGif
+    }
   },
   methods: {
+    pushRoute(e) {
+      let arr = e.path
+      let wrapper = undefined
+      let id = undefined
+      arr.forEach(item => {
+        if(item.className === 'content-item') {
+          wrapper = item
+        }
+      })
+      if(wrapper === undefined) return
+      id = wrapper.children[0].value
+      this.$router.push(`/albumdetail/${id}`)
+    },
     getPlaycount(item) {
       let str = item.playcount.toString()
       let length = str.length
@@ -64,13 +97,32 @@ export default {
         case 9:
           return `${str.slice(0,5)}.${str.slice(5,6)}万`
           break;
+        case 10:
+          return `${str.slice(0,6)}.${str.slice(6,7)}万`
+          break;
       }
+    },
+    getImg() {
+      let arr = document.querySelectorAll('.item-main img')
+      
+      this.recommendList.forEach((item, index) => {
+        let newImg = new Image()
+        newImg.src = item.picUrl
+        newImg.onerror = () => { // 图片加载错误时的替换图片
+          this.picUrl = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
+        }
+        newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
+          arr[index].src = item.picUrl
+        }
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+/* import loadingGif from '../../../../../assets/img/loading.gif' */
+
 .playlist-content {
   display: flex;
   justify-self: start;
@@ -86,21 +138,38 @@ export default {
 }
 .top-text {
   position: absolute;
-  top: -80px;
+  top: -100px;
   z-index: 99;
   width: 100%;
+  height: 40px;
   background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
-  transition: 0.5s;
-  padding: 12px 8px;
+  transition: 0.3s;
+  padding: 10px 10px;
+  font-size: 12px;
+}
+.top-text span{
+  height: 25px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 10px;
+  display: -webkit-box;
 }
 .item-main {
   position: absolute;
   width: 100%;
   height: 180px;
-  background-size: cover!important;
   overflow: hidden;
 }
+.item-main img {
+  width: 100%;
+  height: 100%;
+}
+/* .default-bg {
+  background: url('../../../../../assets/img/loading.gif');
+} */
 .play-count, .play-icon {
   color: #fff;
 }

@@ -6,6 +6,14 @@ import store from './store'
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
+  let isLogin = window.sessionStorage.getItem('isLogin')
+  console.log(window.sessionStorage.getItem('isLogin'));
+  let pathObj = {}
+  if(!isLogin) {
+    isLogin = false
+  } else {
+    isLogin = isLogin.toString() === 'true' ? true : false
+  }
   if(window.sessionStorage.getItem('token')) {
     let o = {
       isLogin: window.sessionStorage.getItem('isLogin'),
@@ -16,7 +24,11 @@ router.beforeEach((to, from, next) => {
     }
     store.commit('set_user', o)
   }
-  next()
+  if((to.matched[0].path !== '/home' && isLogin === false)) {
+    window.sessionStorage.setItem('sideItem', 0)
+    pathObj = {path: '/home/forU'}
+  } 
+  next(pathObj)
 })
 
 new Vue({

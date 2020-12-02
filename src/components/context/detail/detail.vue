@@ -26,16 +26,12 @@ export default {
   },
   watch: {
     '$route': {
-      handler: function() {
-        // this.id = this.$route.params.id
-        // this.init()
+      handler: function(to, from) {
+        this.id = to.params.id
+        this.init()
       },
       immediate: true
     }
-  },
-  created() {
-    this.id = this.$route.params.id
-    this.init()
   },
   methods: {
     init() {
@@ -45,30 +41,23 @@ export default {
     getPlayListDetail(id) {
       getPlayListDetail(id).then(result => {
         let res = result.data
-        Object.assign(this.headInfo, {
-          coverImg: res.playlist.coverImgUrl,
-          createTime: res.playlist.createTime,
-          trackCount: res.playlist.trackCount,
-          playCount: res.playlist.playCount,
-          tags: res.playlist.tags,
-          des: res.playlist.description,
-          name: res.playlist.name,
-          creatorImg: res.playlist.creator.avatarUrl,
-          creatorName: res.playlist.creator.nickname
-        })
-        Object.assign(this.contentInfo, {
-          tracks: res.playlist.tracks,
-          commentCount: res.playlist.commentCount,
-          subscribers: res.playlist.subscribers,
-        })
+        let tag1 = ['coverImgUrl', 'createTime', 'trackCount',
+                  'playCount', 'tags', 'description', 'name', 'subscribed',
+                  'subscribedCount', 'shareCount','avatarUrl', 'nickname', 'userId']
+        let tag2 = ['tracks', 'commentCount', 'subscribers']
+        for(let n = 0; n < tag1.length; n++) {
+          if(n > tag1.length - 4) {
+            this.$set(this.headInfo, tag1[n], res.playlist.creator[tag1[n]])
+          } else {
+            this.$set(this.headInfo, tag1[n], res.playlist[tag1[n]])    
+          }
+        }
+        for(let n = 0; n < tag2.length ; n++) {
+          this.$set(this.contentInfo, tag2[n], res.playlist[tag2[n]])
+        }
       })
     }
   },
-  beforeRouteUpdate(to, from, next) {  
-    this.id = to.params.id
-    next()
-    this.init()
-  }
 }
 </script>
 

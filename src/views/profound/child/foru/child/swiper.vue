@@ -4,7 +4,8 @@
     <swiper-item v-for="(item, index) in banners"
       :key="index" :index="index" @itemLoad="itemLoad"
       :bannersLen="banners.length" >
-      <img :src="item.imageUrl" slot="item-img">
+      <!-- <img :src="item.imageUrl" slot="item-img"> -->
+      <img :src="picUrl" slot="item-img">
       <span slot="item-span" class="item-title">{{item.typeTitle}}</span>
     </swiper-item>
   </swiper-wrapper>
@@ -12,6 +13,7 @@
 
 <script>
 import {swiperWrapper, swiperItem} from '@/components/common/swiper/index.js'
+import loadingGif from '../../../../../assets/img/loading.gif'
 
 export default {
   name: 'swiper',
@@ -24,10 +26,21 @@ export default {
       type: Array
     }
   },
+  watch: {
+    banners: {
+      handler: function() {
+        setTimeout(() => {
+          this.getImg()
+        }, 500);
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       swiperItems: [], //dom数组
-      num: 0 //图片加载的个数
+      num: 0, //图片加载的个数
+      picUrl: loadingGif
     }
   },
   methods: {
@@ -46,7 +59,21 @@ export default {
           this.swiperItems[n].style.display = "none"
         }
       }
-    }
+    },
+    getImg() {
+      let arr = document.querySelectorAll('.item-img img')
+      
+      this.banners.forEach((item, index) => {
+        let newImg = new Image()
+        newImg.src = item.imageUrl
+        newImg.onerror = () => { // 图片加载错误时的替换图片
+          this.picUrl = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
+        }
+        newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
+          arr[index].src = item.imageUrl
+        }
+      })
+    } 
   }
 }
 </script>

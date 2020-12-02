@@ -339,3 +339,15 @@ template {
 [hidden] {
   display: none;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  width: 8px;
+  background-color: #ebeef5;
+}

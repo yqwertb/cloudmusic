@@ -16,6 +16,12 @@ export function getDailySong(timestamp) {
   })
 }
 
+export function getSong() {
+  return request({
+    url: '/personalized'
+  })
+}
+
 // 独家放送
 export function getPrivatecontent() {
   return request({

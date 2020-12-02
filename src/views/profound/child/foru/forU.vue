@@ -5,8 +5,8 @@
     </transition>
     <div v-if="!isLoading">
       <swiper :banners="banners"></swiper>
-      <div v-if="!isLogin" class="not-login">登录获取更多</div>
-      <div v-if="isLogin" class="content">
+      <!-- <div v-if="!isLogin" class="not-login">登录获取更多</div> -->
+      <div class="content">
         <play-list-a :recommendList="recommendList"></play-list-a>
         <private-con :privateContent="privateContent"></private-con>
         <new-songs :newSongs="newSongs"></new-songs>
@@ -26,8 +26,8 @@ import Loading from "@/components/common/loading/loading.vue";
 import axios from 'axios'
 
 import {
-  getBanner, getDailySong, getPrivatecontent,
-  getNewsong,
+  getBanner, getDailySong, getSong,
+  getPrivatecontent,  getNewsong,
 } from "@/network/home.js"
 
 export default {
@@ -52,15 +52,16 @@ export default {
   watch: {
     isLogin: {
       handler: function() {
-        this.isLoading = true
-        this.init()
+        // this.isLoading = true
+        // this.init()
       },
-      immediate: true
+      // immediate: trues
     }
   },
   created() {
     this.isLogin = this.$store.state.user['user-info'].isLogin
-    this.getBanner()
+    // this.getBanner()
+    this.init()
   },
   mounted() {
   },
@@ -69,25 +70,37 @@ export default {
   methods: {
     // 网络请求
     init() {
-      if(this.isLogin.toString() === 'true') {
+      new Promise((resolve) => {
+        this.getBanner()
         this.allRequest()
-      } else {
-        new Promise((resolve) => {
-          this.getBanner()
-          resolve()
-        }).then(() => {
-          this.isLoading = false
-        })
-      }
+        resolve()
+      }).then(() => {
+        this.isLoading = false
+      })
+      // if(this.isLogin.toString() === 'true') {
+        // this.allRequest()
+      // } else {
+      //   new Promise((resolve) => {
+      //     this.getBanner()
+      //     this.allRequest()
+      //     resolve()
+      //   }).then(() => {
+      //     this.isLoading = false
+      //   })
+      // }
       // this.getDailySong()
       // this.getPrivatecontent()
       // this.getNewsong()
       
     },
     allRequest() {
-      
-      axios.all([this.getDailySong(), 
-        this.getPrivatecontent(), this.getNewsong()])
+      let all = [this.getPrivatecontent(), this.getNewsong()]
+      if(this.isLogin.toString() === 'true') {
+        all.unshift(this.getDailySong())
+      } else {
+        all.unshift(this.getSong())
+      }
+      axios.all(all)
         .then(axios.spread(() => {
           setTimeout(() => {
             this.isLoading = false
@@ -108,6 +121,21 @@ export default {
         })
       })
     },
+    getSong() {
+      getSong().then(result => {
+        let res = result.data
+        let rec = res.result
+        for(let n = 0; n < 4; n++) {
+          this.$set(this.recommendList, n, {
+            name: rec[n].name,
+            copywriter: rec[n].copywriter,
+            picUrl: rec[n].picUrl,
+            playcount: rec[n].playCount,
+            id: rec[n].id               
+          })
+        }
+      })
+    },
     getDailySong() {
       let timestamp = new Date().getTime()
       getDailySong(timestamp).then(result => {
@@ -121,7 +149,8 @@ export default {
               name: item.name,
               copywriter: item.copywriter,
               picUrl: item.picUrl,
-              playcount: item.playcount,              
+              playcount: item.playcount,  
+              id: item.id              
             })
             n++
           }

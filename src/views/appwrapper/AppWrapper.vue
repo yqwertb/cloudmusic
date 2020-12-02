@@ -232,11 +232,11 @@ export default {
   position: fixed;
   top: 44px;
   width: 1200px;
-  height: calc(100vh - 44px);
+  height: 100%;
   background-color: #fafafa;
 }
 #content {
-  width: calc(1200px - 240px);
-  height: calc(100vh - 94px);
+  width: 960px;
+  height: 100%;
 }
 </style>

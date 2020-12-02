@@ -13,7 +13,7 @@
           <div class="item-content">
             <router-link to="./">
               <div class="item-img">
-                <img :src="item.picUrl">
+                <img :src="item.picUrl + '?param=45y45'">
                 <div class="play-icon">
                   <i class="iconfont icon-bofang"></i>
                 </div>
@@ -36,7 +36,7 @@
           <div class="item-content">
             <router-link to="./">
               <div class="item-img">
-                <img :src="item.picUrl">
+                <img :src="item.picUrl + '?param=45y45'">
                 <div class="play-icon">
                   <i class="iconfont icon-bofang"></i>
                 </div>

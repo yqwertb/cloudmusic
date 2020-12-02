@@ -8,15 +8,9 @@
 </template>
 
 <script>
-import navBar from '@/components/common/navbar/navBar'
-import navItem from '@/components/common/navbar/navItem'
 
 export default {
   name: 'navBarBase',
-  components: {
-    navBar,
-    navItem,
-  },
   data() {
     return {
       itemText: ['个性推荐', '歌单', '主播电台', '排行榜', '歌手', '最新音乐'],
@@ -59,6 +53,10 @@ export default {
 }
 .nav-item {
   min-width: 60px;
+  cursor: pointer;
+}
+.nav-text:hover {
+  color: #c62f2f;
 }
 .nav-text {
   text-align: center;

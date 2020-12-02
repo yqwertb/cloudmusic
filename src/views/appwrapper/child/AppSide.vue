@@ -29,8 +29,8 @@
     </div>
 
     <div class="sidebar-item">
-      <div class="sidebar-item__head" @click="hide">创建的歌单</div>
-      <side-bar class="mylist">
+      <div class="sidebar-item__head my-play-list" @click="hide($event)">创建的歌单</div>
+      <side-bar class="play-list">
         <side-item v-for="(item, index) in myPlayList" :key="index" :path="'/listdetail/'+item.id" @item-click="itemClick">
           <div class="sidebar-item__content__item" slot="content-item">
             <div class="item-icon">
@@ -43,8 +43,8 @@
     </div>
 
     <div class="sidebar-item">
-      <div class="sidebar-item__head" @click="hide">收藏的歌单</div>
-      <side-bar class="mylist">
+      <div class="sidebar-item__head my-star-list" @click="hide($event)">收藏的歌单</div>
+      <side-bar class="star-list">
         <side-item v-for="(item, index) in myStarList" :key="index" :path="'/albumdetail/'+item.id" @item-click="itemClick">
           <div class="sidebar-item__content__item" slot="content-item">
             <div class="item-icon">
@@ -79,10 +79,17 @@ export default {
   watch: {
     myPlayList: {
       handler: function() {
-        this.init()
-      }
+        this.$nextTick(() => {
+          this.getList()
+          this.init()
+        })
+        // this.init()
+        // this.isInit = true
+      },
+      deep: true
     }
   },
+
   data() {
     return {
       sidebar: {
@@ -150,29 +157,63 @@ export default {
         ["/home/forU", "/fm", "/video", "/friend"],
         ["/cloud", "/dj", "/sub"],[]
       ],
-      allItems: null,
-      currentItem: 0
+      allItems: [],
+      currentItem: 0,
+      isInit: false
     };
   },
   created() {
+    if(!this.myPlayList.length) {
+      this.$nextTick(() => {
+        this.init()
+      })
+    }
+    
   },
   mounted() {
+
   },
   methods: {
+    getList() {
+      this.allItems.splice(0, this.allItems.length)
+      document.querySelectorAll(".sidebar-item__content").forEach(item => {
+        this.allItems.push(item)
+      })
+    },
     init() {
       this.$nextTick(() => {
-      this.allItems = document.querySelectorAll(".sidebar-item__content")
-      let path = this.$route.path
-      let index = window.sessionStorage.getItem('sideItem')
-      let currentIndex = index === null ? this.currentItem : index
-      if(currentIndex === 0 || path === '/home') {
-        this.allItems[0].classList.add('active')
-      } else {
-        this.allItems[currentIndex].classList.add('active')
-      }
+        if(!this.myPlayList.length) {
+          this.allItems.splice(0, this.allItems.length)
+          document.querySelectorAll(".sidebar-item__content").forEach(item => {
+            this.allItems.push(item)
+          })
+        }
+        let path = this.$route.path
+        let index = window.sessionStorage.getItem('sideItem')
+        let currentIndex = index === null ? this.currentItem : index
+        if(currentIndex === 0 || path === '/home') {
+          this.allItems[0].classList.add('active')
+        } else {
+          if(currentIndex > this.allItems.length && window.sessionStorage.getItem('isLogin').toString() === 'false') {
+            this.allItems[0].classList.add('active')
+            this.$router.push('/home/forU')
+          } else {
+            this.allItems[currentIndex].classList.add('active')
+          }
+      
+        } 
       })
     },
     itemClick(e) {
+      let isLogin = window.sessionStorage.getItem('isLogin')
+      if(!isLogin) {
+        isLogin = false
+      } else {
+        isLogin = isLogin.toString() === 'true' ? true : false
+      }
+      if(!isLogin) return   
+      // let currentpath = this.$route.path
+      // if( currentpath !== e[1]) return
       this.allItems.forEach( item => {
         item.classList.remove('active')
       });
@@ -180,12 +221,21 @@ export default {
         if(item.contains(e[0].target)) {
           item.classList.add('active')
           window.sessionStorage.setItem('sideItem', index)
+          console.log(index);
         }
       });
     },
-    hide() {
-      let list = document.querySelector(".mylist")
-      if (list.className === 'mylist') {
+    hide(e) {
+      let target = e.target.classList[1]
+      let classname = ''
+      if(target === 'my-play-list') {
+        classname = 'play-list'
+      } else if(target === 'my-star-list'){
+        classname = 'star-list'
+      }
+      let list = document.querySelector(`.${classname}`)
+      console.log(list.className);
+      if (list.className === classname) {
         list.classList.add('mylist-hide')
       } else {
         list.classList.remove('mylist-hide')
@@ -243,5 +293,8 @@ export default {
 }
 .mylist-hide {
   height: 0;
+}
+.play-list, .star-list {
+  transition: 0.5s;
 }
 </style>
