@@ -13,7 +13,6 @@ export default {
     // }
   },
   mounted() {
-     document.querySelector('.nav-item').classList.add('active')
   },
   methods: {
     itemClick(e) {

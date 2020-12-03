@@ -7,7 +7,6 @@ Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
   let isLogin = window.sessionStorage.getItem('isLogin')
-  console.log(window.sessionStorage.getItem('isLogin'));
   let pathObj = {}
   if(!isLogin) {
     isLogin = false
@@ -24,7 +23,9 @@ router.beforeEach((to, from, next) => {
     }
     store.commit('set_user', o)
   }
-  if((to.matched[0].path !== '/home' && isLogin === false)) {
+  if((to.matched[0].path === '/fm' || to.matched[0].path === '/friend' || 
+      to.matched[0].path === '/cloud' || to.matched[0].path === '/dj' || 
+      to.matched[0].path === '/sub') && isLogin === false ) {
     window.sessionStorage.setItem('sideItem', 0)
     pathObj = {path: '/home/forU'}
   } 

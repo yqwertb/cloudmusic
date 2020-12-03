@@ -221,7 +221,6 @@ export default {
         if(item.contains(e[0].target)) {
           item.classList.add('active')
           window.sessionStorage.setItem('sideItem', index)
-          console.log(index);
         }
       });
     },

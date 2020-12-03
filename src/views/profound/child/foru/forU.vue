@@ -20,6 +20,7 @@ import swiper from './child/swiper.vue'
 import playListA from './child/playlistA.vue'
 import privateCon from './child/privateCon.vue'
 import newSongs from './child/newSongs.vue';
+import message from '@/components/common/message/tmpmes.vue'
 
 import Loading from "@/components/common/loading/loading.vue";
 
@@ -37,7 +38,8 @@ export default {
     playListA,
     privateCon,
     newSongs,
-    Loading
+    Loading,
+    message
   },
   data() {
     return {

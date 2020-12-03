@@ -21,7 +21,6 @@ export default {
       if(this.$route.path !== this.path) {
         this.$router.push(this.path);
       }
-      console.log(this.path);
       this.$emit('item-click', [$e, this.path])
     }
   },

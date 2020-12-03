@@ -13,6 +13,10 @@ export default {
 
     }
   },
+  mounted() {
+    // 给第一个添加active样式
+    document.querySelector('.nav-item').classList.add('active')
+  },
   methods: {
     enter($e) {
       let ele = document.querySelector('.bottom-line')
@@ -38,7 +42,6 @@ export default {
           left = 90 * n
         }
       }
-      console.log(left);
       ele.style.left = left + 'px'
     }
   }
@@ -62,6 +65,6 @@ export default {
   height: 4px;
   background: #c62f2f;
   border-radius: 6px;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 </style>

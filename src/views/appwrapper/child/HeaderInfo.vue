@@ -107,7 +107,8 @@ export default {
       console.log(1);
       let timestamp = new Date().getTime()
       if(!this.userinfo.sign) {
-        dailySign(timestamp).then( res => {
+        dailySign().then( result => {
+          let res = result.data
           if(res.code === 200) {
             this.userinfo = Object.assign({}, this.userinfo, {'sign': true})
             alert("签到成功，获得五积分")

@@ -22,6 +22,26 @@ export default {
   components: {
     NavBar,
     NavItem,
+  },
+  watch: {
+    contentInfo: {
+      handler: function() {
+        this.infoUpdated()
+      },
+      deep: true
+    }
+  },
+  methods: {
+    infoUpdated() {
+      let eles = document.querySelectorAll('.nav-item')
+      eles.forEach((item, index) => {
+        if(index === 0) 
+          item.classList.add('active')
+        else
+          item.classList.remove('active')
+      })
+      document.querySelector('.bottom-line').style.left = 0 + 'px'
+    }
   }
 
 }

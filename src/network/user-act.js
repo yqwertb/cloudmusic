@@ -1,11 +1,10 @@
 import {request} from './request'
 
-export function dailySign(timestamp) {
+export function dailySign() {
   return request({
     url: '/daily_signin',
     params: {
       type: 1,
-      timestamp
     },
     withCredentials: true
   })
