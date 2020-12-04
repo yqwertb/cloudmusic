@@ -1,12 +1,13 @@
 import {request} from './request'
 
-export function phoneLogin(phone, password) {
+export function phoneLogin(phone, password, timestamp) {
   return request({
     method: 'post',
     url: '/login/cellphone',
     data: {
       phone, 
-      password
+      password,
+      timestamp
     },
   })
 }

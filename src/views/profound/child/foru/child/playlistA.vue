@@ -66,7 +66,8 @@ export default {
   },
   methods: {
     pushRoute(e) {
-      let arr = e.path
+      // 兼容火狐和Safari浏览器
+      let arr = e.path || e.composedPath()
       let wrapper = undefined
       let id = undefined
       arr.forEach(item => {

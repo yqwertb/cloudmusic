@@ -17,11 +17,12 @@ export default {
   methods: {
     itemClick(e) {
       let allItems = document.querySelectorAll('.nav-item')
+      let path = e.path || e.composedPath()
       allItems.forEach( item => {
         item.classList.remove('active')
       });
       allItems.forEach( (item, index) => {
-        if(item.contains(e.path[0])) {
+        if(item.contains(path[0])) {
           item.classList.add('active')
         }
       });

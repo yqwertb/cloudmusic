@@ -98,8 +98,8 @@ export default {
       }
     },    
     subLogin(o) {
-      
-      phoneLogin(o.phone, o.psw).then(result => {
+      let timestamp = new Date().getTime()
+      phoneLogin(o.phone, o.psw, timestamp).then(result => {
         if(result.data.code === 200) {
           let res = result.data
           let allCookies = document.cookie

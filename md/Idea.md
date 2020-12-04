@@ -5,4 +5,4 @@
 - 使用路由中的导航守卫判断是否登录和前往的路径 进行相应的拦截跳转
 - 使用input标签的value属性携带网络请求需要的参数，在需要发送的时候获取value
 - 利用this.$set()方法和数组的一些方法解决vue不能双向绑定对象和数组的问题
-
+- event对象的兼容问题（playlistA.vue -> pushRoute方法） 火狐和Safari浏览器 没有path属性 要通过composedPath()方法获取path
