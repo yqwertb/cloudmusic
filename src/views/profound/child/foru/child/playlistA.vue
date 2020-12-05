@@ -133,6 +133,7 @@ export default {
 }
 .content-item {
   position: relative;
+  cursor: pointer;
   width: 180px;
   height: 230px;
   margin-bottom: 10px;

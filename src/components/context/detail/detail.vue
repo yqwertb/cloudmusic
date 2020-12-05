@@ -9,7 +9,9 @@
 import detailHead from './child/head.vue'
 import detailContent from './child/content.vue'
 
-import {getPlayListDetail} from '@/network/detail.js'
+import { getPlayListDetail, getSongDetail,
+        getPlayListComment, getSubscriber } from '@/network/detail.js'
+import { checkSong, getSongURL} from '@/network/songs.js'
 
 export default {
   name: 'detail',
@@ -22,6 +24,7 @@ export default {
       id: undefined,
       headInfo: {},
       contentInfo: {},
+      trackIds: [],
     }
   },
   watch: {
@@ -31,30 +34,63 @@ export default {
         this.init()
       },
       immediate: true
+      // deep: true
     }
   },
   methods: {
     init() {
       this.getPlayListDetail(this.id)
+      this.$delete(this.contentInfo, 'tracks')
     },
     //网络请求
     getPlayListDetail(id) {
-      getPlayListDetail(id).then(result => {
+      let timestamp = new Date().getTime()
+      getPlayListDetail(id, timestamp).then(result => {
         let res = result.data
-        let tag1 = ['coverImgUrl', 'createTime', 'trackCount',
+        let tagHead = ['coverImgUrl', 'createTime', 'trackCount',
                   'playCount', 'tags', 'description', 'name', 'subscribed',
                   'subscribedCount', 'shareCount','avatarUrl', 'nickname', 'userId']
-        let tag2 = ['tracks', 'commentCount', 'subscribers']
-        for(let n = 0; n < tag1.length; n++) {
-          if(n > tag1.length - 4) {
-            this.$set(this.headInfo, tag1[n], res.playlist.creator[tag1[n]])
+        let tagContent = ['tracks', 'commentCount',]
+        let trackItems = []
+        for(let n = 0; n < tagHead.length; n++) {
+          if(n > tagHead.length - 4) {
+            this.$set(this.headInfo, tagHead[n], res.playlist.creator[tagHead[n]])
           } else {
-            this.$set(this.headInfo, tag1[n], res.playlist[tag1[n]])    
+            this.$set(this.headInfo, tagHead[n], res.playlist[tagHead[n]])    
           }
         }
-        for(let n = 0; n < tag2.length ; n++) {
-          this.$set(this.contentInfo, tag2[n], res.playlist[tag2[n]])
+        // 设置内容数据
+        this.trackIds.splice(0, this.trackIds.length)
+        trackItems = res.playlist['trackIds']
+        for(let n = 0; n < trackItems.length; n++) {
+          this.trackIds.push(trackItems[n].id)
         }
+        this.getSongDetail(this.trackIds)
+        this.$set(this.contentInfo, 'commentCount', res.playlist['commentCount'])
+      })
+    },
+    getSongDetail(idArr) {
+      let ids = idArr.toString()
+
+      getSongDetail(ids).then( result => {
+        let res = result.data
+        let songsArr = res.songs
+        let songItem = {}
+        let tracks = []
+        songsArr.forEach((item, index) => {
+          songItem = {
+            id: item.id,
+            name: item.name,
+            album: {
+              id: item.al.id,
+              name: item.al.name,
+            },
+            creator: item.ar,
+            duration: item.dt
+          }
+          tracks.push(songItem)
+        })
+        this.$set(this.contentInfo, 'tracks', tracks)
       })
     }
   },

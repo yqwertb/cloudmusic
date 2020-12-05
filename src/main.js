@@ -26,9 +26,8 @@ router.beforeEach((to, from, next) => {
   if((to.matched[0].path === '/fm' || to.matched[0].path === '/friend' || 
       to.matched[0].path === '/cloud' || to.matched[0].path === '/dj' || 
       to.matched[0].path === '/sub') && isLogin === false ) {
-    window.sessionStorage.setItem('sideItem', 0)
-    pathObj = {path: '/home/forU'}
-  } 
+    return
+  }
   next(pathObj)
 })
 

@@ -60,8 +60,11 @@ export default {
 <style scoped>
 .login {
   position: absolute;
-  top: 180px;
-  left: 435px;
+  /* top: 180px;
+  left: 435px; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
   width: 360px;
   height: 450px;
   background-color: #fafafa;

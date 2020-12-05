@@ -26,6 +26,7 @@ export default {
           item.classList.add('active')
         }
       });
+      this.$emit('itemClik', e)
     }
   }
 }
@@ -33,9 +34,10 @@ export default {
 
 <style scoped>
 .nav-item {
-  width: 70px;
+  width: 80px;
   margin-right: 20px;
   text-align: center;
+  cursor: pointer;
 }
 .nav-text {
   text-align: center;

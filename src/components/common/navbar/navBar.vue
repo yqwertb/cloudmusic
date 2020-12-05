@@ -26,11 +26,11 @@ export default {
       let left = undefined
       if(text === '歌曲列表') {
         ele.style.left = 0 + 'px'
-      } else if(text === '评论') {
-        ele.style.left = 90 + 'px'
       } else if(text === '收藏者') {
-        ele.style.left = 180 + 'px'
-      }
+        ele.style.left = 200 + 'px'
+      } else {
+        ele.style.left = 100 + 'px'
+      } 
     },
     leave($e) {
       let ele = document.querySelector('.bottom-line')
@@ -39,7 +39,7 @@ export default {
       let left = undefined
       for(let n = 0; n < 3; n++) {
         if(items[n].classList[1]) {
-          left = 90 * n
+          left = 100 * n
         }
       }
       ele.style.left = left + 'px'
@@ -61,7 +61,7 @@ export default {
 .bottom-line {
   position: absolute;
   bottom: 0px;
-  width: 70px;
+  width: 80px;
   height: 4px;
   background: #c62f2f;
   border-radius: 6px;

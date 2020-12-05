@@ -72,7 +72,7 @@ export default {
       info: this.headInfo,
       update: true,
       defaultPic: loadingGif,
-      uid: window.sessionStorage.getItem('user_uid')
+      uid: window.sessionStorage.getItem('user_uid'),
     }
   },
   beforeUpdate() {
@@ -173,7 +173,7 @@ export default {
 <style scoped>
 .detail-head {
   display: flex;
-  margin-top: 30px;
+  margin-top: 15px;
 }
 .head-left, .head-left img {
   width: 250px;

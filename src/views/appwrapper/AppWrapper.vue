@@ -88,8 +88,9 @@ export default {
   methods: {
     // 保存路由信息
     getRoute() {
-      Object.assign(this.currentRoute, this.$route)
+      // Object.assign(this.currentRoute, this.$route)
       this.$router.go(0)
+      this.$router.push({path: '/home/forU'})
     },
     // 提交用户登录数据
     dataRefresh() {
@@ -117,13 +118,14 @@ export default {
           this.infoCount = true
           this.isLogin = !this.isLogin
           this.loginActive = !this.loginActive
+          this.getRoute()
         } else {
           alert("账号或密码错误")
         }
-        this.getRoute()
+        
       }).catch(res => {
         alert(res.data.message)
-        this.getRoute()
+        // this.getRoute()
       })
     },
     getPlaylist(uid) {
@@ -178,6 +180,7 @@ export default {
         window.sessionStorage.removeItem('user_name')
         window.sessionStorage.removeItem('user_img')
         window.sessionStorage.setItem('isLogin', false)
+        window.sessionStorage.setItem('sideItem', 0)
         this.getRoute()
       })
     },
@@ -232,11 +235,13 @@ export default {
   position: fixed;
   top: 44px;
   width: 1200px;
+  /* height: calc(100% - 130px); */
   height: 100%;
   background-color: #fafafa;
 }
 #content {
   width: 960px;
-  height: 100%;
+  /* height: 100%; */
+  height: calc(100% - 95px);
 }
 </style>

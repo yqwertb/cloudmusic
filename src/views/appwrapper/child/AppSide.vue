@@ -249,13 +249,14 @@ export default {
 <style scoped>
 #app_content_sidebar {
   width: 240px;
+  height: calc(100% - 120px);
   padding-bottom: 20px;
   overflow-y: auto;
   color: #666;
 }
 .sidebar-item {
   margin-top: 15px;
-    overflow: hidden;
+  overflow: hidden;
 }
 .sidebar-item__head {
   color: #7d7d7d;
