@@ -3,6 +3,7 @@
     <div class="small-player">
     </div>
     <div class="player-bar">
+      <audio src="" id="myAudio"></audio>
     </div>
   </div>
 </template>

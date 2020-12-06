@@ -50,3 +50,22 @@ export function deleteComm(...arg) {
     }
   })
 }
+
+/**
+ * t:1 发送, 2 回复
+ * tpye: 0歌曲,1mv,2专辑,3歌单,4电台,5视频,6动态
+ * id：资源id
+ * content :要发送的内容
+ * arg:commentId :回复的评论id (回复评论时必填)
+ */
+export function comment(t, type, id, content, ...arg) {
+  let commentId = arg
+  let obj = {t, type, id, content}
+  if(commentId) {
+    obj['commentId'] = commentId
+  }
+  return request({
+    url:'/comment',
+    params: ojb
+  })
+}

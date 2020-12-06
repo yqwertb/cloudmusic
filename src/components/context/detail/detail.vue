@@ -9,9 +9,8 @@
 import detailHead from './child/head.vue'
 import detailContent from './child/content.vue'
 
-import { getPlayListDetail, getSongDetail,
-        getPlayListComment, getSubscriber } from '@/network/detail.js'
-import { checkSong, getSongURL} from '@/network/songs.js'
+import { getPlayListDetail, getPlayListComment, getSubscriber } from '@/network/detail.js'
+
 
 export default {
   name: 'detail',
@@ -65,34 +64,11 @@ export default {
         for(let n = 0; n < trackItems.length; n++) {
           this.trackIds.push(trackItems[n].id)
         }
-        this.getSongDetail(this.trackIds)
+        this.$set(this.contentInfo, 'trackIds', this.trackIds)
         this.$set(this.contentInfo, 'commentCount', res.playlist['commentCount'])
       })
     },
-    getSongDetail(idArr) {
-      let ids = idArr.toString()
 
-      getSongDetail(ids).then( result => {
-        let res = result.data
-        let songsArr = res.songs
-        let songItem = {}
-        let tracks = []
-        songsArr.forEach((item, index) => {
-          songItem = {
-            id: item.id,
-            name: item.name,
-            album: {
-              id: item.al.id,
-              name: item.al.name,
-            },
-            creator: item.ar,
-            duration: item.dt
-          }
-          tracks.push(songItem)
-        })
-        this.$set(this.contentInfo, 'tracks', tracks)
-      })
-    }
   },
 }
 </script>

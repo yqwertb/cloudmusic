@@ -9,12 +9,13 @@ export function checkSong(id) {
   })
 }
 
-export function getSongURL(ids) {
+export function getSongURL(id) {
   return request({
     url: '/song/url',
     params: {
-      ids,
+      id,
       br: 128000
     }
   })
 }
+

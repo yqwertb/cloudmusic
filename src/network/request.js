@@ -3,8 +3,8 @@ import axios from 'axios'
 
 export function request(config) {
   const instance = axios.create({
-    baseURL: 'http://m.61play.top:3000/',
-    // baseURL: 'http://192.168.31.240:3000/',
+    // baseURL: 'http://m.61play.top:3000/',
+    baseURL: 'http://192.168.31.240:3000/',
     // baseURL: 'http://localhost:3000/',
     // baseURL: 'http://192.168.31.247:3000/',
     timeout: 5000,

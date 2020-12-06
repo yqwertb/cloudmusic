@@ -1,12 +1,12 @@
 <template>
   <div class="detail-content">
-    <nav-bar>
-      <nav-item @itemClik="navClick"><div slot="nav-text">歌曲列表</div></nav-item>
-      <nav-item @itemClik="navClick"><div slot="nav-text">评论({{contentInfo.commentCount}})</div></nav-item>
-      <nav-item @itemClik="navClick"><div slot="nav-text">收藏者</div></nav-item>
+    <nav-bar @navClik="navClick">
+      <nav-item @item-click="navItemClick"><div slot="nav-text">歌曲列表</div></nav-item>
+      <nav-item @item-click="navItemClick"><div slot="nav-text">评论({{contentInfo.commentCount}})</div></nav-item>
+      <nav-item @item-click="navItemClick"><div slot="nav-text">收藏者</div></nav-item>
     </nav-bar>
     <div class="detail-content-wrapper">
-      <song-list :tracks="tracks" v-if="contentIndex === 0"></song-list>
+      <song-list :trackArr="trackArr" v-if="contentIndex === 0" @itemClick="songItemClick"></song-list>
       <comment v-else-if="contentIndex === 1"></comment>
       <collect v-else-if="contentIndex === 2"></collect>
     </div>
@@ -20,6 +20,9 @@ import SongList from './songList.vue'
 import Comment from './comment.vue'
 import collect from './collect.vue'
 
+import { checkSong, getSongURL} from '@/network/songs.js'
+import { getSongDetail} from '@/network/detail.js'
+
 export default {
   name: 'detailContent',
   props: {
@@ -31,8 +34,8 @@ export default {
     return {
       contentIndex: 0,
       textList: ['歌曲列表', '评论', '收藏者'],
-      commentCount: '-',
-      tracks: null,
+      tracksId: null,
+      trackArr: null,
       commentInfo: {},
       collectInfo: {}
     }
@@ -47,7 +50,8 @@ export default {
   watch: {
     contentInfo: {
       handler: function() {
-        if(Object.getOwnPropertyDescriptor(this.contentInfo, 'tracks')) {
+        if(Object.getOwnPropertyDescriptor(this.contentInfo, 'trackIds')) {
+          this.tracksId = this.contentInfo.trackIds
           this.init()
         }
       },
@@ -58,6 +62,7 @@ export default {
     init() {
       this.infoUpdated()
       this.infoAssign()
+      this.trackArr = this.getSongDetail(this.tracksId)
     },
     infoUpdated() {
       let eles = document.querySelectorAll('.nav-item')
@@ -69,17 +74,22 @@ export default {
       })
       this.contentIndex = 0
       this.commentCount = this.contentInfo.commentCount
-      this.tracks = this.contentInfo.tracks
       document.querySelector('.bottom-line').style.left = 0 + 'px'
     },
     infoAssign() {
       console.log(this.contentInfo);
     },
     navClick(e) {
-      let targetText = e.target.innerHTML
+      let target = e.path[0]
+      let targetText = target.innerHTML
+      let reg = /^评论/
+      this.textList[1] = targetText.match(reg) ? targetText.match(reg).input : null
+
       switch (targetText) {
         case this.textList[0]:
           this.contentIndex = 0
+          this.trackArr.splice(0, this.trackArr.length)
+          this.trackArr = this.getSongDetail(this.tracksId)
           break
         case this.textList[1]:
           this.contentIndex = 1
@@ -88,6 +98,47 @@ export default {
           this.contentIndex = 2
           break
       }
+    },
+    navItemClick(e) {
+      // console.log(e);
+    },
+    songItemClick(id) {
+      this.getSongURL(id)
+    },
+    getSongDetail(idArr) {
+      let ids = idArr.toString()
+      let tracks = []
+
+      getSongDetail(ids).then( result => {
+        let res = result.data
+        let songsArr = res.songs
+        let songItem = {}
+        songsArr.forEach((item, index) => {
+          songItem = {
+            id: item.id,
+            name: item.name,
+            album: {
+              id: item.al.id,
+              name: item.al.name,
+            },
+            creator: item.ar,
+            duration: item.dt,
+            mv: item.mv
+          }
+          tracks.push(songItem)
+        })
+      })
+      
+      return tracks
+    },
+    getSongURL(ids) {
+      getSongURL(ids).then( result => {
+        let res = result.data.data[0]
+        let audio = document.querySelector('#myAudio')
+        audio.setAttribute('src', res.url)
+        audio.load()
+        audio.play()
+      })
     }
   }
 
