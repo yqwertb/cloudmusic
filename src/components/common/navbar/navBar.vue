@@ -23,23 +23,27 @@ export default {
   },
   methods: {
     getLinePos(e) {
-      let target = e.path[1]
+      let path = e.path || e.composedPath()
+      let target = path[1]
       let itemWidth = target.offsetWidth
       let left = target.offsetLeft
       document.querySelector('.bottom-line').style.width = itemWidth + 'px'
       return left
     },
     navClick(e) {
-      if(this.itemsDom.indexOf(e.path[1]) !== -1) {
+      let path = e.path || e.composedPath()
+      if(this.itemsDom.indexOf(path[1]) !== -1) {
         this.getLinePos(e)
         this.$emit('navClik', e)
       }
     },
     enter($e) {
-      if(this.itemsDom.indexOf($e.path[1]) !== -1) {
+      let path = $e.path || $e.composedPath()
+      if(this.itemsDom.indexOf(path[1]) !== -1) {
         let left = this.getLinePos($e)
         let ele = document.querySelector('.bottom-line')
-        let target = $e.target
+        // let target = $e.target
+        let target = path[1]
         let text = target.innerHTML
         if(text === '歌曲列表') {
           ele.style.left = left  + 'px'

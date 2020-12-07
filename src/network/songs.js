@@ -14,7 +14,7 @@ export function getSongURL(id) {
     url: '/song/url',
     params: {
       id,
-      br: 128000
+      br: 192000
     }
   })
 }

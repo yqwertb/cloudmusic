@@ -64,13 +64,17 @@ export default {
       let arr = document.querySelectorAll('.item-img img')
       
       this.banners.forEach((item, index) => {
+        let reg = /^(http)/i
         let newImg = new Image()
-        newImg.src = item.imageUrl
+        let url = item.imageUrl.replace(reg, "https")
+        newImg.src = url
+        
         newImg.onerror = () => { // 图片加载错误时的替换图片
           this.picUrl = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
         }
         newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
-          arr[index].src = item.imageUrl
+          // console.log(item.imageUrl.match(reg));
+          arr[index].src = newImg.src
         }
       })
     } 

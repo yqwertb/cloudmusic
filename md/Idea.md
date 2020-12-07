@@ -6,3 +6,7 @@
 - 使用input标签的value属性携带网络请求需要的参数，在需要发送的时候获取value
 - 利用this.$set()方法和数组的一些方法解决vue不能双向绑定对象和数组的问题
 - event对象的兼容问题（playlistA.vue -> pushRoute方法） 火狐和Safari浏览器 没有path属性 要通过composedPath()方法获取path
+- **`Object.getOwnPropertyDescriptor()`** 方法返回指定对象上一个自有属性对应的属性描述符。（自有属性指的是直接赋予该对象的属性，不需要从原型链上进行查找的属性）
+- ![image-20201207164137906](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20201207164137906.png)
+
+设置反向代理

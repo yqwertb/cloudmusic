@@ -1,4 +1,5 @@
 <template>
+ <!-- @scroll="handleScroll($event)" -->
   <div class="songlist">
     <div class="songlist-head">
       <div class="head-item title">音乐标题</div>
@@ -7,13 +8,14 @@
       <div class="head-item short">时长</div>
     </div>
     <div class="songlist-content" @click='contentItemClick'>
-      <div class="content-item" v-for="(item, index) in trackList" :key="item.id" @dblclick="itemClick(item.id)">
+      <div class="content-item" v-for="(item, index) in trackList" :key="index" @dblclick="itemClick(item.id)">
         <div class="item item-num">{{index | getIndex}}</div>
         <div class="item item-title">{{item.name}}</div>
         <div class="item item-creator">{{item.creator[0].name}}</div>
         <div class="item item-album">{{item.album.name}}</div>
         <div class="item item-duration">{{item.duration | getDuration}}</div>
       </div>
+      <div class="songlist-bottom" v-if="showedCount === allCount">到底了~</div>
     </div>
   </div>
 </template>
@@ -24,21 +26,29 @@ export default {
   data() {
     return {
       trackList: null,
+      // 已经展示的数量
+      showedCount: null
     }
   },
   props: {
     trackArr: {
       type: Array
+    },
+    allCount: {
+      type: Number
     }
   },
   watch: {
     trackArr: {
-      handler: function() {
+      handler: function(n) {
         this.trackList = this.trackArr
-      }
+        this.showedCount = this.trackList.length
+      },
+      deep: true
     }
   },
   mounted() {
+    this.$EventBus.$on('getMoreSong', this.handlerScroll)
   },
   beforeDestroy() {
     this.trackList.splice(0, this.trackList.length)
@@ -60,7 +70,8 @@ export default {
       this.$emit('itemClick', id)
     },
     contentItemClick(e) {
-      let contentItem = e.path[1]
+      let path = e.path || e.composedPath()
+      let contentItem = path[1]
       let contentItems = document.querySelectorAll('.content-item')
       // 设置点击的背景色
       if(contentItem.classList[0] === 'content-item') {
@@ -69,12 +80,19 @@ export default {
         })
         contentItem.classList.add('content-item-active')
       }
+    },
+    handlerScroll() {
+      if(this.trackList.length === this.allCount) return
+      this.$emit('pushNewSongs', this.showedCount)
     }
   }
 }
 </script>
 
 <style scoped>
+.songlist {
+  position: relative;
+}
 .songlist-head {
   width: 100%;
   height: 30px;
@@ -134,4 +152,10 @@ export default {
 .item-title, .item-creator, .item-album {
   padding-right: 10px;
 }
+.songlist-bottom {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+}
+
 </style>

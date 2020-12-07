@@ -5,6 +5,8 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+Vue.prototype.$EventBus = new Vue()
+
 router.beforeEach((to, from, next) => {
   let isLogin = window.sessionStorage.getItem('isLogin')
   let pathObj = {}

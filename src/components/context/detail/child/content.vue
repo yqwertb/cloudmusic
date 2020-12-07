@@ -6,7 +6,8 @@
       <nav-item @item-click="navItemClick"><div slot="nav-text">收藏者</div></nav-item>
     </nav-bar>
     <div class="detail-content-wrapper">
-      <song-list :trackArr="trackArr" v-if="contentIndex === 0" @itemClick="songItemClick"></song-list>
+      <song-list :trackArr="trackArr" :allCount="allCount" @pushNewSongs="pushNewSongs"
+        v-if="contentIndex === 0" @itemClick="songItemClick"></song-list>
       <comment v-else-if="contentIndex === 1"></comment>
       <collect v-else-if="contentIndex === 2"></collect>
     </div>
@@ -36,8 +37,12 @@ export default {
       textList: ['歌曲列表', '评论', '收藏者'],
       tracksId: null,
       trackArr: null,
+      // 滚动后新加的
+      newTrackArr: null,
+      // 全部音乐的数量
+      allCount: null,
       commentInfo: {},
-      collectInfo: {}
+      collectInfo: {},
     }
   },
   components: {
@@ -58,11 +63,15 @@ export default {
       deep: true
     }
   },
+  beforeUpdate() {
+    this.emitCount = 0
+  },
   methods: {
     init() {
       this.infoUpdated()
       this.infoAssign()
-      this.trackArr = this.getSongDetail(this.tracksId)
+      this.allCount = this.tracksId.length
+      this.trackArr = this.getSongDetail(this.tracksId.slice(0, 30))
     },
     infoUpdated() {
       let eles = document.querySelectorAll('.nav-item')
@@ -77,10 +86,11 @@ export default {
       document.querySelector('.bottom-line').style.left = 0 + 'px'
     },
     infoAssign() {
-      console.log(this.contentInfo);
+
     },
     navClick(e) {
-      let target = e.path[0]
+      let path = e.path || e.composedPath()
+      let target = path[0]
       let targetText = target.innerHTML
       let reg = /^评论/
       this.textList[1] = targetText.match(reg) ? targetText.match(reg).input : null
@@ -89,7 +99,7 @@ export default {
         case this.textList[0]:
           this.contentIndex = 0
           this.trackArr.splice(0, this.trackArr.length)
-          this.trackArr = this.getSongDetail(this.tracksId)
+          this.trackArr = this.getSongDetail(this.tracksId.slice(0, 30))
           break
         case this.textList[1]:
           this.contentIndex = 1
@@ -101,6 +111,24 @@ export default {
     },
     navItemClick(e) {
       // console.log(e);
+    },
+    pushNewSongs(number) {
+      this.newTrackArr = null
+      let frontNum = number
+      let behindNum = this.allCount - frontNum < 30 ? 
+                      this.allCount - frontNum : 30 
+      let newArr = []
+      newArr = this.getSongDetail(this.tracksId.slice(frontNum, frontNum + behindNum))
+      let timer = setInterval(() => {
+        if(newArr.length !== 0) {
+          newArr.forEach(item => {
+            this.trackArr.push(item)
+          })
+          clearInterval(timer)
+        }
+      }, 100)
+    
+      // console.log(this.emitCount);
     },
     songItemClick(id) {
       this.getSongURL(id)
@@ -148,5 +176,8 @@ export default {
 <style scoped>
 .detail-content {
   margin-top: 14px;
+}
+.detail-content-wrapper {
+  position: relative;
 }
 </style>

@@ -41,6 +41,7 @@
       <div class="right-foot">
         <div class="foot-tag">{{info.tags | getTags}}</div>
         <div class="foot-des">简介：{{info.description === null ? '暂无简介' : info.description}}</div>
+        <div class="foot-arrow" @click="arrowClick" v-show="isArrowShow"></div>
       </div>
     </div>                                                                                         
   </div>
@@ -73,6 +74,7 @@ export default {
       update: true,
       defaultPic: loadingGif,
       uid: window.sessionStorage.getItem('user_uid'),
+      isArrowShow: null
     }
   },
   beforeUpdate() {
@@ -81,6 +83,7 @@ export default {
     },100)
     setTimeout(() => {
       this.getImg()
+      this.arrowShow()
     },300)
   },
   filters: {
@@ -165,6 +168,28 @@ export default {
           item.src = index === 0 ? this.info.coverImgUrl : this.info.avatarUrl
         }
       })
+    },
+    arrowClick(e) {
+      let target = e.target
+      let des = document.querySelector('.foot-des')
+      let textHeight = des.scrollHeight + 10 + 'px'
+      if(!target.classList[1]) {
+        des.style.height = textHeight
+        target.classList.add('arrow-active')
+      } else {
+        des.style = null
+        target.classList.remove('arrow-active')
+      }
+    },
+    arrowShow() {
+      let des = document.querySelector('.foot-des')
+      let textHeight = des.scrollHeight - 4
+
+      if(textHeight < des.offsetHeight) {
+        this.isArrowShow = false
+      } else {
+        this.isArrowShow = true
+      }
     }
   }
 }
@@ -192,7 +217,7 @@ export default {
 }
 .right-head-tag {
   position: relative;
-  top: -2px;
+  top: -14px;
   padding: 2px 4px;
   border: 1px solid #e03f40;
   font-size: 13px;
@@ -206,6 +231,10 @@ export default {
   height: 35px;
   line-height: 35px;
   font-weight: bold;
+  width: 380px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .right-head-right {
   display: flex;
@@ -293,6 +322,7 @@ export default {
   background: #f5f5f7;
 }
 .right-foot {
+  position: relative;
   margin-top: 30px;
 }
 .foot-tag, .foot-des {
@@ -301,8 +331,24 @@ export default {
 .foot-des {
   position: relative;
   margin-top: 6px;
-  height: 58px;
+  padding-right: 30px;
+  height: 62px;
   overflow: hidden;
+  transition: 0.4s;
 }
-
+.foot-arrow {
+  position: absolute;
+  top: 25px;
+  right: 0px;
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid#333333;
+  border-left: 2px solid#333333;
+  transform: rotate(225deg);
+  transition: 0.4s;
+}
+.arrow-active {
+  transform: rotate(45deg);
+}
 </style>

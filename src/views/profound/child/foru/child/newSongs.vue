@@ -9,17 +9,17 @@
     <div class="newsongs-content">
       <div class="content-left">
         <div class="content-item" v-for="(item, index) in newSongs.slice(0,5)" :key="index">
-          <div class="item-num">{{index | indexChange}}</div>
-          <div class="item-content">
+          <div class="song-item-num">{{index | indexChange}}</div>
+          <div class="song-item-content">
             <router-link to="./">
-              <div class="item-img">
-                <img :src="item.picUrl + '?param=45y45'">
+              <div class="song-item-img">
+                <img :src="url">
                 <div class="play-icon">
                   <i class="iconfont icon-bofang"></i>
                 </div>
               </div>  
             </router-link>
-            <div class="item-text">
+            <div class="song-item-text">
               <div class="text-up">
                 {{item.name}}<span class="up-alias" v-if="!(item.alias.length === 0)">（{{item.alias[0]}}）</span>
               </div>
@@ -32,17 +32,17 @@
       </div>
       <div class="content-right">
         <div class="content-item" v-for="(item, index) in newSongs.slice(5,10)" :key="index">
-          <div class="item-num">{{index+5 | indexChange}}</div>
-          <div class="item-content">
+          <div class="song-item-num">{{index+5 | indexChange}}</div>
+          <div class="song-item-content">
             <router-link to="./">
-              <div class="item-img">
-                <img :src="item.picUrl + '?param=45y45'">
+              <div class="song-item-img">
+                <img :src="url">
                 <div class="play-icon">
                   <i class="iconfont icon-bofang"></i>
                 </div>
               </div>  
             </router-link>
-            <div class="item-text">
+            <div class="song-item-text">
               <div class="text-up">
                 {{item.name}}<span class="up-alias" v-if="!(item.alias.length === 0)">（{{item.alias[0]}}）</span>
               </div>
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import loadingGif from '../../../../../assets/img/loading.gif'
+
 export default {
   name: 'newSongs',
   props: {
@@ -65,9 +67,18 @@ export default {
       type: Array
     }
   },
+  watch: {
+    newSongs: {
+      handler: function() {
+        this.$nextTick(() => {
+          this.getImg()
+        })
+      }
+    }
+  },
   data() {
     return {
-
+      url: loadingGif
     }
   },
   filters: {
@@ -93,6 +104,25 @@ export default {
       return artists
     }
   },
+  methods: {
+    getImg() {
+      let arr = document.querySelectorAll('.song-item-img img')
+      this.newSongs.forEach((item, index) => {
+        let reg = /^(http)/i
+        let newImg = new Image()
+        let url = item.picUrl.replace(reg, "https")
+        newImg.src = url + '?param=45y45'
+        
+        newImg.onerror = () => { // 图片加载错误时的替换图片
+          this.picUrl = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
+        }
+        newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
+          // console.log(item.imageUrl.match(reg));
+          arr[index].src = newImg.src
+        }        
+      })
+    }
+  }
 }
 </script>
 
@@ -109,7 +139,7 @@ export default {
 .content-left, .content-right {
   width: 50%;
 }
-.content-item, .item-content {
+.content-item, .song-item-content {
   display: flex;
   justify-content: flex-start;
 }
@@ -119,22 +149,22 @@ export default {
 .content-item:nth-child(2n) {
   background-color: #f5f5f7;
 }
-.item-content {
+.song-item-content {
   margin: 10px 0;
   height: 45px;
 }
-.item-num {
+.song-item-num {
   width: 40px;
   line-height: 65px;
   text-align: center;
   color: #b099a4;
   font-size: 14px;
 }
-.item-img img {
+.song-item-img img {
   width: 45px;
   height: 45px;
 }
-.item-img {
+.song-item-img {
   height: 45px;
   position: relative;
 }
@@ -151,7 +181,7 @@ export default {
   left: 10px;
   font-size: 20px;
 }
-.item-text {
+.song-item-text {
   width: 334.5px;
   margin-left: 10px;
   padding: 2px 0;
