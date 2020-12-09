@@ -51,7 +51,7 @@ export default {
       this.initTop = e.target.scrollTop
       if(e.target.scrollTop + 50 > restHeight && scroll > 0) {
         console.log('send');
-        this.$EventBus.$emit('getMoreSong')
+        this.$EventBus.$emit('getMore')
       }
     },
     init() {
@@ -91,35 +91,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .detail-wrapper {
 }
-.detail-loading {
-  margin: 0 auto;
-  z-index: 9;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 5px solid #ffffff;
-  border-top: 5px solid red;
-  border-bottom: 5px solid blue;
-  -webkit-animation: spin 0.5s linear infinite;
-  animation: spin 0.5s linear infinite;
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
+
 </style>

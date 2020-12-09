@@ -249,7 +249,8 @@ export default {
 <style scoped>
 #app_content_sidebar {
   width: 240px;
-  height: calc(100% - 120px);
+  /* height: calc(100% - 120px); */
+  height: 100%;
   padding-bottom: 20px;
   overflow-y: auto;
   color: #666;

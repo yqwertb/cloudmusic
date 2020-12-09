@@ -29,18 +29,26 @@
     };
     return throttled;
   },
-  getImg(query, src) {
-    let arr = document.querySelectorAll(query)
-    arr.forEach((item, index) => {
-      let newImg = new Image()
-      newImg.src = src
-      newImg.onerror = () => { // 图片加载错误时的替换图片
-        this.picUrl = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
-      }
-      newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
-        item.src = src
-      }
-    })
+  /*
+   * query css选择器
+   * src 图片的链接
+   * index 可选 如果多个图片不是同一个 传入index
+   */
+  getImg(query, src, index) {
+    let item = null
+    if(index || index === 0) {
+      item = document.querySelectorAll(query)[index]
+    } else {
+      item = document.querySelector(query)
+    }
+    let newImg = new Image()
+    newImg.src = src
+    newImg.onerror = () => { // 图片加载错误时的替换图片
+      item.src = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
+    }
+    newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
+      item.src = src
+    }
   },
  }
 

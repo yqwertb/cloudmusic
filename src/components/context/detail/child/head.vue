@@ -22,7 +22,7 @@
       </div>
       <div class="right-creator">
         <div class="creator">
-          <img :src="info.avatarUrl">
+          <img :src="defaultPic">
           <span class="creator-name">{{info.nickname}}</span>
         </div>
         <div class="creat-time">{{info.createTime | changeTime}} 创建</div>
@@ -82,8 +82,8 @@ export default {
       document.querySelector('.head-left img').src = this.defaultPic
     },100)
     setTimeout(() => {
-      this.$utils.getImg('.detail-head img', this.info.coverImgUrl)
-      // this.getImg(getImg)
+      this.$utils.getImg('.creator img', this.info.avatarUrl)
+      this.$utils.getImg('.head-left img', this.info.coverImgUrl)
       this.arrowShow()
     },300)
   },
@@ -117,19 +117,6 @@ export default {
     }
   },
   methods: {
-    // getImg() {
-    //   let arr = document.querySelectorAll('.detail-head img')
-    //   arr.forEach((item, index) => {
-    //     let newImg = new Image()
-    //     newImg.src = index === 0 ? this.info.coverImgUrl : this.info.avatarUrl
-    //     newImg.onerror = () => { // 图片加载错误时的替换图片
-    //       this.picUrl = 'https://s1.ax1x.com/2020/08/26/dfEfDx.png'
-    //     }
-    //     newImg.onload = () => { // 图片加载成功后把地址给原来的newImg
-    //       item.src = index === 0 ? this.info.coverImgUrl : this.info.avatarUrl
-    //     }
-    //   })
-    // },
     arrowClick(e) {
       let target = e.target
       let des = document.querySelector('.foot-des')

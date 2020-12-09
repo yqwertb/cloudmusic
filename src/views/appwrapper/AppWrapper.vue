@@ -18,7 +18,7 @@
     </div>
   
     <!-- 底部固定播放器 -->
-    <player></player>
+    <!-- <player></player> -->
   </div>
 </template>
 
@@ -243,6 +243,7 @@ export default {
 #content {
   width: 960px;
   /* height: 100%; */
-  height: calc(100% - 95px);
+  /* height: calc(100% - 55px); */
+  height: 100%;
 }
 </style>

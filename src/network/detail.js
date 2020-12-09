@@ -48,24 +48,27 @@ export function getPlayListComment(id) {
   })
 }
 
-export function getPlayListCommentNew(id, type, ...arg) {
-  let pageNo = arg[0]
-  let pageSize = arg[1]
-  let sortType = arg[2]
-  let obj = {
-    id, type
-  }
-  if(arg.length !== 0) {
-    obj['pageNo'] = pageNo
-    obj['pageSize'] = pageSize
-    obj['sortType'] = sortType
-  }
+export function getPlayListMoreComment(id, limit, offset) {
   return request({
     url: '/comment/playlist',
-    params: obj
+    params: {
+      id,
+      limit,
+      offset
+    }
   })
 }
-
+// let pageNo = arg[0]
+// let pageSize = arg[1]
+// let sortType = arg[2]
+// let obj = {
+//   id, limit
+// }
+// if(arg.length !== 0) {
+//   obj['pageNo'] = pageNo
+//   obj['pageSize'] = pageSize
+//   obj['sortType'] = sortType
+// }
 
 export function getSubscriber(id) {
   return request({

@@ -6,9 +6,10 @@
       <nav-item @item-click="navItemClick"><div slot="nav-text">收藏者</div></nav-item>
     </nav-bar>
     <div class="detail-content-wrapper">
-      <song-list :trackArr="trackArr" :allCount="allCount" :isLoading="isLoading" 
+      <song-list :trackArr="trackArr" :allSongCount="allSongCount" :isLoading="isLoading" 
         v-if="contentIndex === 0" @itemClick="songItemClick"></song-list>
-      <comment :commentInfo="commentInfo" v-else-if="contentIndex === 1"></comment>
+      <comment :commentInfo="commentInfo" :lastInfo="lastInfo" :isLoading="isLoading"
+        v-else-if="contentIndex === 1"></comment>
       <collect v-else-if="contentIndex === 2"></collect>
     </div>
   </div>
@@ -22,7 +23,8 @@ import Comment from './comment.vue'
 import collect from './collect.vue'
 
 import { checkSong, getSongURL} from '@/network/songs.js'
-import { getSongDetail, getPlayListComment} from '@/network/detail.js'
+import { getSongDetail, getPlayListComment,
+         getPlayListMoreComment} from '@/network/detail.js'
 
 export default {
   name: 'detailContent',
@@ -35,6 +37,9 @@ export default {
     return {
       contentIndex: 0,
       textList: ['歌曲列表', '评论', '收藏者'],
+      getCommentNum: 0,
+      // 已经显示de评论
+      getCommentCount: 20,
       listId: null,
       // 音乐id的数组
       tracksId: null,
@@ -43,10 +48,12 @@ export default {
       // 滚动后新加的可显示音乐数据
       newTrackArr: null,
       // 全部音乐的数量
-      allCount: null,
+      allSongCount: null,
+      allCommentCount: null,
       // 是否加载更多歌曲
       isLoading: false,
       commentInfo: [],
+      lastInfo: [],
       collectInfo: [],
       
     }
@@ -71,16 +78,15 @@ export default {
     }
   },
   mounted() {
-    this.$EventBus.$on('getMoreSong', this.handlerScroll)
+    this.$EventBus.$on('getMore', this.handlerScroll)
   },
   beforeUpdate() {
-    this.emitCount = 0
   },
   methods: {
     init() {
       this.infoUpdated()
       this.infoAssign()
-      this.allCount = this.tracksId.length
+      this.allSongCount = this.tracksId.length
       this.trackArr = this.getSongDetail(this.tracksId.slice(0, 30))
     },
     infoUpdated() {
@@ -126,20 +132,48 @@ export default {
       // console.log(e);
     },
     handlerScroll() {
-      this.newTrackArr = null
-      let frontNum = this.trackArr.length
-      if(this.allCount === frontNum) return
-
-      this.isLoading = true
-      let behindNum = this.allCount - frontNum < 30 ? 
-                      this.allCount - frontNum : 30 
       let newArr = []
-      newArr = this.getSongDetail(this.tracksId.slice(frontNum, frontNum + behindNum))
-      let timer = setInterval(() => {
+      let timer = undefined
+      let allArr = []
+
+      switch (this.contentIndex) {
+        case 0:
+          newArr = this.getMoreSong()
+          break;
+        case 1:
+          newArr = this.getMoreComment()
+          // console.log(this.getMoreComment());
+          break;
+        case 2:
+          // newArr.forEach(item => {
+          //   this.trackArr.push(item)
+          // })
+          break;
+      }
+      
+      timer = setInterval(() => {
+        if(newArr === false) return
+
         if(newArr.length !== 0) {
-          newArr.forEach(item => {
-            this.trackArr.push(item)
-          })
+          switch (this.contentIndex) {
+            case 0:
+              newArr.forEach(item => {
+                this.trackArr.push(item)
+              })
+              break;
+            case 1:
+              this.lastInfo.splice(0, this.lastInfo.length)
+              newArr.forEach(item => {
+                this.lastInfo.push(item)
+              })
+              this.getCommentCount = this.getCommentCount + this.lastInfo.length
+              break;
+            case 2:
+              // newArr.forEach(item => {
+              //   this.trackArr.push(item)
+              // })
+              break;
+          }
           clearInterval(timer)
           setTimeout(() => {
             this.isLoading = false
@@ -194,9 +228,56 @@ export default {
     getPlayListComment(id) {
       getPlayListComment(id).then( result => {
         let res = result.data
+        let obj = {
+          comments: res.comments,
+          total: res.total
+        }
+        this.allCommentCount = res.total
         this.$set(this.commentInfo, '0', res.hotComments)
-        this.$set(this.commentInfo, '1', res.comments)
+        this.$set(this.commentInfo, '1', obj)
       })
+    },
+    getPlayListMoreComment(id, limit, offset) {
+      let arr = []
+      getPlayListMoreComment(id, limit, offset).then( result => {
+        let res = result.data.comments
+        res.forEach(item => {
+          arr.push(item)
+        })
+      })
+      return arr
+    },
+    getMoreSong() {
+      this.newTrackArr = null
+      let frontNum = this.trackArr.length
+      let newArr = []
+      if(this.allSongCount === frontNum) return false
+
+      this.isLoading = true
+      let behindNum = this.allSongCount - frontNum < 30 ? 
+                      this.allSongCount - frontNum : 30 
+
+      newArr = this.getSongDetail(this.tracksId.slice(frontNum, frontNum + behindNum))
+      
+      return newArr
+    },
+    getMoreComment() {
+
+      let frontNum = this.getCommentCount
+      console.log(this.allCommentCount);
+      console.log(frontNum);
+      if(this.allCommentCount === frontNum) return false
+
+      this.isLoading = true
+      this.getCommentNum = this.getCommentNum + 1
+      let offset = this.getCommentNum * 20
+      let limit = this.allCommentCount - frontNum < 20 ?                                                          this.allCommentCount - frontNum : 20
+
+      let id = this.listId
+      let newArr = []
+
+      newArr =  this.getPlayListMoreComment(id, limit, offset)
+      return newArr
     }
   }
 

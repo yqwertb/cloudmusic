@@ -15,7 +15,7 @@
         <div class="item item-album">{{item.album.name}}</div>
         <div class="item item-duration">{{item.duration | getDuration}}</div>
       </div>
-      <div class="songlist-bottom" v-if="showedCount === allCount">到底了~</div>
+      <div class="songlist-bottom" v-if="showedCount === allSongCount">到底了~</div>
     </div>
      <div class="detail-loading loading" v-if="isLoading"></div>
   </div>
@@ -35,7 +35,7 @@ export default {
     trackArr: {
       type: Array
     },
-    allCount: {
+    allSongCount: {
       type: Number
     },
     isLoading: {
@@ -51,9 +51,6 @@ export default {
       deep: true
     }
   },
-  // mounted() {
-  //   this.$EventBus.$on('getMoreSong', this.handlerScroll)
-  // },
   beforeDestroy() {
     this.trackList.splice(0, this.trackList.length)
   },
@@ -85,10 +82,6 @@ export default {
         contentItem.classList.add('content-item-active')
       }
     },
-    handlerScroll() {
-      // if(this.trackList.length === this.allCount) return
-      // this.$emit('pushNewSongs', this.showedCount)
-    }
   }
 }
 </script>
@@ -162,6 +155,18 @@ export default {
   font-size: 14px;
 }
 .loading {
-  margin-top: -50px;
+  margin-top: -80px !important;
+}
+.detail-loading {
+  margin: 0 auto;
+  z-index: 9;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 5px solid #ffffff;
+  border-top: 5px solid red;
+  border-bottom: 5px solid blue;
+  -webkit-animation: spin 0.5s linear infinite;
+  animation: spin 0.5s linear infinite;
 }
 </style>
