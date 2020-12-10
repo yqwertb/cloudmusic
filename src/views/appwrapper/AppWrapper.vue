@@ -233,17 +233,21 @@ export default {
 }
 #app__content {
   display: flex;
-  position: fixed;
-  top: 44px;
-  width: 1200px;
+  width: 100%;
+  height: calc(100% - 45px);
+  /* position: fixed;
+  top: 44px; */
+  /* width: 1200px; */
   /* height: calc(100% - 130px); */
-  height: 100%;
+  /* height: 100%; */
   background-color: #fafafa;
 }
 #content {
-  width: 960px;
+  /* width: 960px; */
   /* height: 100%; */
   /* height: calc(100% - 55px); */
+  width: 80%;
   height: 100%;
+  padding-bottom: 50px;
 }
 </style>

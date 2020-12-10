@@ -212,8 +212,7 @@ export default {
         isLogin = isLogin.toString() === 'true' ? true : false
       }
       if(!isLogin) return   
-      // let currentpath = this.$route.path
-      // if( currentpath !== e[1]) return
+
       this.allItems.forEach( item => {
         item.classList.remove('active')
       });
@@ -248,10 +247,11 @@ export default {
 
 <style scoped>
 #app_content_sidebar {
-  width: 240px;
+  /* width: 240px; */
   /* height: calc(100% - 120px); */
+  width: 20%;
   height: 100%;
-  padding-bottom: 20px;
+  padding-bottom: 140px;
   overflow-y: auto;
   color: #666;
 }

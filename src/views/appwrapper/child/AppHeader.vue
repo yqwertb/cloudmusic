@@ -116,10 +116,11 @@ export default {
 
 <style scoped>
 #app__header {
-  position: fixed;
+  /* position: fixed; */
   display: flex;
   justify-content: space-between;
-  width: 1200px;
+  /* width: 1200px; */
+  width: 100%;
   height: 44px;
   line-height: 44px;
   color: #fff;

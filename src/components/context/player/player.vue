@@ -16,9 +16,9 @@ export default {
 
 <style scoped>
 .player {
-  position: absolute;
+  /* position: absolute; */
   /* top:  calc(100% - 50px); */
-  bottom: 0;
+  /* bottom: 0px; */
   height: 50px;
   width: 1200px;
 }

@@ -70,11 +70,13 @@ export function getPlayListMoreComment(id, limit, offset) {
 //   obj['sortType'] = sortType
 // }
 
-export function getSubscriber(id) {
+export function getSubscriber(id, limit, offset) {
   return request({
     url: '/playlist/subscribers',
     params: {
-      id
+      id,
+      limit,
+      offset
     }
   })
 }

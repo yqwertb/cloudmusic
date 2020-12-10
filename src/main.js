@@ -12,7 +12,21 @@ for (let key in utils.filters){
 }  
 
 Vue.prototype.$EventBus = new Vue()
+// function IsPC() {
+//   var userAgentInfo = navigator.userAgent;
+//   var Agents = new Array("Windows", "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
+//   Agents.forEach(item => {
+//     if (userAgentInfo.indexOf(item) > 0) {
+//       alert(item);
+//     }
+//   })
+// }
+// IsPC()
+// alert(window.screen.availWidth)
+// alert(window.screen.availHeight);
 
+alert(document.body.clientHeight)
+alert(document.body.clientWidth)
 router.beforeEach((to, from, next) => {
   let isLogin = window.sessionStorage.getItem('isLogin')
   let pathObj = {}

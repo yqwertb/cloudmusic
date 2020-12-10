@@ -3,7 +3,7 @@
     <div class="comments-input-wrapper" v-show="false">
       <textarea class="comments-input"></textarea>
     </div>
-    <div v-if="isFirstLoading" class="detail-loading loading"></div>
+    <div v-if="isFirstLoading" class="detail-loading first-loading"></div>
     <div class="comments-wrapper" v-else-if="!isFirstLoading">
       <div class="hot-comments" v-if="hotLength !== 0">
         <div class="hot-head">精彩评论</div>
@@ -78,7 +78,7 @@
       <div class="none-comments" v-else-if="hotLength === 0 && lastLength === 0">
         还没有评论~
       </div>
-      <div class="comments-bottom" v-if="lastLength === total">到底了~</div>
+      <div class="comments-bottom" v-if="lastLength === total && hotLength !== 0 && lastLength !== 0">到底了~</div>
       <div class="detail-loading bottom-loading" v-if="isLoading"></div>
     </div>
   </div>
@@ -192,11 +192,10 @@ export default {
   position: relative;
   display: flex;
   margin-top: 14px;
+  border-bottom: 1px solid #efefef;
 
 }
-.last-comment {
-  border-bottom: 1px solid #efefef;
-}
+
 .comment-right {
   display: flex;
   flex-direction: column;
@@ -237,6 +236,9 @@ export default {
   font-size: 14px;
   color: #999999;
 }
+.context-comment {
+  margin-bottom: 10px;
+}
 .comment-item-act {
   display: flex;
 }
@@ -252,6 +254,9 @@ export default {
 .loading {
   top: 50%;
   left: 50%;
+}
+.first-loading {
+  margin-top: 10px !important;
 }
 .comments-bottom {
   width: 100%;
@@ -275,5 +280,9 @@ export default {
   border-bottom: 5px solid blue;
   -webkit-animation: spin 0.5s linear infinite;
   animation: spin 0.5s linear infinite;
+}
+.none-comments {
+  margin-top: 50px;
+  text-align: center;
 }
 </style>

@@ -10,7 +10,7 @@
         v-if="contentIndex === 0" @itemClick="songItemClick"></song-list>
       <comment :commentInfo="commentInfo" :lastInfo="lastInfo" :isLoading="isLoading"
         v-else-if="contentIndex === 1"></comment>
-      <collect v-else-if="contentIndex === 2"></collect>
+      <collect :collectInfo="collectInfo" v-else-if="contentIndex === 2"></collect>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ import collect from './collect.vue'
 
 import { checkSong, getSongURL} from '@/network/songs.js'
 import { getSongDetail, getPlayListComment,
-         getPlayListMoreComment} from '@/network/detail.js'
+         getPlayListMoreComment, getSubscriber} from '@/network/detail.js'
 
 export default {
   name: 'detailContent',
@@ -125,6 +125,7 @@ export default {
           break
         case this.textList[2]:
           this.contentIndex = 2
+          this.getSubscriber(this.listId)
           break
       }
     },
@@ -182,7 +183,7 @@ export default {
       }, 100)
       setTimeout(() => {
         if(newArr.length === 0) {
-          alert('加载失败')
+          // alert('加载失败')
           this.isLoading = false
         }
       }, 3000)
@@ -223,6 +224,26 @@ export default {
         audio.setAttribute('src', res.url)
         audio.load()
         audio.play()
+      })
+    },
+    getSubscriber(id, limit, offset) {
+      this.collectInfo.splice(0, this.collectInfo.length)
+      limit = 20
+      offset = 0
+      getSubscriber(id, limit, offset).then( result => {
+        let res = result.data
+        if(res.total === 0) {
+          this.collectInfo.splice(0, this.collectInfo.length)
+        }
+        let sub = res.subscribers
+        let obj = {}
+        sub.forEach((item, index) => {
+          obj = {
+            nickname: item.nickname,
+            avatarUrl: item.avatarUrl
+          }
+          this.$set(this.collectInfo, index, obj)
+        })
       })
     },
     getPlayListComment(id) {

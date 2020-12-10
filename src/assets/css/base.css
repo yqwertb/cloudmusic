@@ -8,7 +8,7 @@
   -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
-@media screen and (max-height: 900px) and (min-height: 100px)  {
+/* @media screen and (max-height: 900px) and (min-height: 100px)  {
   #app {
     height: 100%;
   }
@@ -19,7 +19,7 @@
     height: 39% !important;
   } 
   .player {
-    bottom: -120px !important;
+    top: calc(100% + 80px) !important;
   }
   #content {
     margin-bottom: 100px !important;
@@ -36,12 +36,12 @@
     height: 39% !important;
   }
   .player {
-    bottom: -120px !important;
+    top: calc(100% + 80px) !important;
   }
   #content {
     margin-bottom: 100px !important;
   }
-}
+} */
 * > *:focus {
   outline: none;
 }
