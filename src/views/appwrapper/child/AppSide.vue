@@ -254,6 +254,7 @@ export default {
   padding-bottom: 140px;
   overflow-y: auto;
   color: #666;
+  background: #f5f5f7;
 }
 .sidebar-item {
   margin-top: 15px;

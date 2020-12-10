@@ -39,7 +39,7 @@ export default {
       textList: ['歌曲列表', '评论', '收藏者'],
       getCommentNum: 0,
       // 已经显示de评论
-      getCommentCount: 20,
+      getCommentCount: null,
       listId: null,
       // 音乐id的数组
       tracksId: null,
@@ -55,7 +55,6 @@ export default {
       commentInfo: [],
       lastInfo: [],
       collectInfo: [],
-      
     }
   },
   components: {
@@ -189,9 +188,36 @@ export default {
       }, 3000)
     },
     songItemClick(id) {
-      this.getSongURL(id)
+      let info = null
+      info = this.getSongInfo(id)
+
+      let timer = setInterval(() => {
+        if(info[0]) {
+          this.$EventBus.$emit('playSongs', info)
+          clearInterval(timer)
+        }
+      },100)
     },
-    getSongDetail(idArr) {
+    playAllSongs(ids) {
+
+    },
+    getSongInfo(id) {
+      let that = this
+      let songUrlArr = []
+      let songInfo = []
+      songUrlArr = this.getSongURL(id)
+      songInfo = this.getSongDetail(id)
+      let timer = setInterval(() => {
+        if(songUrlArr.length && songInfo.length) {
+          songInfo[0]['url'] = songUrlArr[0]
+          clearInterval(timer)
+          console.log(songInfo);
+        }
+      },100)
+      return songInfo
+    },
+
+    getSongDetail(idArr, type) {
       let ids = idArr.toString()
       let tracks = []
 
@@ -206,6 +232,7 @@ export default {
             album: {
               id: item.al.id,
               name: item.al.name,
+              picUrl: item.al.picUrl
             },
             creator: item.ar,
             duration: item.dt,
@@ -218,13 +245,23 @@ export default {
       return tracks
     },
     getSongURL(ids) {
+      let urls = []
       getSongURL(ids).then( result => {
-        let res = result.data.data[0]
-        let audio = document.querySelector('#myAudio')
-        audio.setAttribute('src', res.url)
-        audio.load()
-        audio.play()
+        let res = result.data.data
+        if(res.length === 0) {
+          urls[0] = res[0].url
+        
+        } else {
+          res.forEach((item, index) => {
+            urls[index] = item.url
+          })
+        }
+        // let audio = document.querySelector('#myAudio')
+        // audio.setAttribute('src', res.url)
+        // audio.load()
+        // audio.play()
       })
+      return urls
     },
     getSubscriber(id, limit, offset) {
       this.collectInfo.splice(0, this.collectInfo.length)
@@ -256,6 +293,7 @@ export default {
         this.allCommentCount = res.total
         this.$set(this.commentInfo, '0', res.hotComments)
         this.$set(this.commentInfo, '1', obj)
+        this.getCommentCount = res.total
       })
     },
     getPlayListMoreComment(id, limit, offset) {
@@ -283,16 +321,14 @@ export default {
       return newArr
     },
     getMoreComment() {
-
       let frontNum = this.getCommentCount
-      console.log(this.allCommentCount);
-      console.log(frontNum);
+
       if(this.allCommentCount === frontNum) return false
 
       this.isLoading = true
       this.getCommentNum = this.getCommentNum + 1
       let offset = this.getCommentNum * 20
-      let limit = this.allCommentCount - frontNum < 20 ?                                                          this.allCommentCount - frontNum : 20
+      let limit = this.allCommentCount - frontNum < 20 ? this.allCommentCount - frontNum : 20
 
       let id = this.listId
       let newArr = []

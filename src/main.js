@@ -25,8 +25,8 @@ Vue.prototype.$EventBus = new Vue()
 // alert(window.screen.availWidth)
 // alert(window.screen.availHeight);
 
-alert(document.body.clientHeight)
-alert(document.body.clientWidth)
+// alert(document.body.clientHeight)
+// alert(document.body.clientWidth)
 router.beforeEach((to, from, next) => {
   let isLogin = window.sessionStorage.getItem('isLogin')
   let pathObj = {}

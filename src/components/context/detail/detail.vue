@@ -50,7 +50,7 @@ export default {
       let restHeight = e.target.scrollHeight - e.target.offsetHeight
       let scroll = e.target.scrollTop - this.initTop
       this.initTop = e.target.scrollTop
-      if(e.target.scrollTop + 60 > restHeight && scroll > 0) {
+      if(e.target.scrollTop + 50 > restHeight && scroll > 0) {
         console.log('send');
         this.$EventBus.$emit('getMore')
       }

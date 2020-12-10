@@ -78,7 +78,7 @@
       <div class="none-comments" v-else-if="hotLength === 0 && lastLength === 0">
         还没有评论~
       </div>
-      <div class="comments-bottom" v-if="lastLength === total && hotLength !== 0 && lastLength !== 0">到底了~</div>
+      <div class="comments-bottom" v-if="lastLength === total && lastLength !== 0">到底了~</div>
       <div class="detail-loading bottom-loading" v-if="isLoading"></div>
     </div>
   </div>

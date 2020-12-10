@@ -11,7 +11,7 @@
       <div class="content-item" v-for="(item, index) in trackList" :key="index" @dblclick="itemClick(item.id)">
         <div class="item item-num">{{index | getIndex}}</div>
         <div class="item item-title">{{item.name}}</div>
-        <div class="item item-creator">{{item.creator[0].name}}</div>
+        <div class="item item-creator">{{item.creator | getCreator}}</div>
         <div class="item item-album">{{item.album.name}}</div>
         <div class="item item-duration">{{item.duration | getDuration}}</div>
       </div>
@@ -64,6 +64,23 @@ export default {
       let min = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()
       let sec = date.getUTCSeconds() < 10 ? `0${date.getUTCSeconds()}` : date.getUTCSeconds()
       return `${min}:${sec}`
+    },
+    getCreator(items) {
+      let len = items.length
+      let str = ''
+      if(len > 1) {
+        items.forEach((item, index) => {
+          if(index + 1 === len) {
+            str = str + item.name
+          } else {
+            str = str + item.name + '/' 
+          }
+          
+        })
+      } else {
+        str = items[0].name
+      }
+      return str
     }
   },
   methods: {

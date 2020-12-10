@@ -18,7 +18,7 @@
     </div>
   
     <!-- 底部固定播放器 -->
-    <!-- <player></player> -->
+    <player></player>
   </div>
 </template>
 
@@ -227,6 +227,7 @@ export default {
 
 <style scoped>
 #app__wrapper {
+  position: relative;
   width: 1200px;
   height: 100vh;
   margin: 0 auto;
@@ -248,6 +249,6 @@ export default {
   /* height: calc(100% - 55px); */
   width: 80%;
   height: 100%;
-  padding-bottom: 50px;
+  padding-bottom: 60px;
 }
 </style>
