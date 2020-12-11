@@ -2,7 +2,7 @@
   <div class="collect">
     <div v-if="isFirstLoading" class="detail-loading first-loading"></div>
     <div class="collect-wrapper" v-else-if="!isFirstLoading">
-      <div class="none-collect" v-if="!hasSub">2143214</div>
+      <div class="none-collect" v-if="!hasSub">你这烂歌单莫人收藏</div>
       <div class="collect-item" v-else v-for="(item, index) in collectInfo" :key="index">
         <div class="collect-img">
           <img :src="defaultPic"/>
@@ -35,7 +35,6 @@ export default {
   watch: {
     collectInfo: {
       handler: function(old, last) {
-        console.log(this.collectInfo);
         if(this.collectInfo.length === 0) {
           this.hasSub = false
         } else {
@@ -53,7 +52,6 @@ export default {
     pagination
   },
   beforeUpdate() {
-    console.log(111);
     setTimeout(() => {
       if(!this.hasSub) return
       this.getImg()
@@ -116,5 +114,10 @@ export default {
   overflow:hidden;
   text-overflow:ellipsis; 
   white-space:nowrap; 
+}
+.none-collect {
+  margin-top: 40px;
+  width: 100%;
+  text-align: center;
 }
 </style>

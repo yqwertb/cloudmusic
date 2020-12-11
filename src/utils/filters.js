@@ -9,6 +9,12 @@ const Filters = {
     str = year + '-' + month + '-' + day
     return str
   },
+  getDuration(item) {
+    let date = new Date(item)
+    let min = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()
+    let sec = date.getUTCSeconds() < 10 ? `0${date.getUTCSeconds()}` : date.getUTCSeconds()
+    return `${min}:${sec}`
+  },
   formatNum(item) {
     if(item === undefined) return
     let str = item.toString()

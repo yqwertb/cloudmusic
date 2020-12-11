@@ -4,7 +4,8 @@ export function checkSong(id) {
   return request({
     url: '/check/music',
     params: {
-      id
+      id,
+      br: 192000
     }
   })
 }

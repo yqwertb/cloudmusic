@@ -8,7 +8,7 @@
       <div class="head-item short">时长</div>
     </div>
     <div class="songlist-content" @click='contentItemClick'>
-      <div class="content-item" v-for="(item, index) in trackList" :key="index" @dblclick="itemClick(item.id)">
+      <div class="content-item" v-for="(item, index) in trackList" :key="index" @dblclick="itemClick(item.id, index)">
         <div class="item item-num">{{index | getIndex}}</div>
         <div class="item item-title">{{item.name}}</div>
         <div class="item item-creator">{{item.creator | getCreator}}</div>
@@ -59,12 +59,6 @@ export default {
       let index = item + 1
       return index < 10 ? '0' + index : index
     },
-    getDuration(item) {
-      let date = new Date(item)
-      let min = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()
-      let sec = date.getUTCSeconds() < 10 ? `0${date.getUTCSeconds()}` : date.getUTCSeconds()
-      return `${min}:${sec}`
-    },
     getCreator(items) {
       let len = items.length
       let str = ''
@@ -84,8 +78,8 @@ export default {
     }
   },
   methods: {
-    itemClick(id) {
-      this.$emit('itemClick', id)
+    itemClick(id, index) {
+      this.$EventBus.$emit('playSongs', this.trackList[index])
     },
     contentItemClick(e) {
       let path = e.path || e.composedPath()

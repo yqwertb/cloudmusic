@@ -122,11 +122,11 @@ export default {
 
 <style scoped>
 .my-info {
-  position: relative;
+  position: absolute;
   top: 44px;
   left: 850px;
   background-color: #fff;
-  z-index: 99;
+  z-index: 100;
   width: 250px;
   box-shadow: 0 0 8px #e2e2e2;
   -webkit-transition: all 0.2s linear;

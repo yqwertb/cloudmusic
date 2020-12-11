@@ -142,7 +142,6 @@ export default {
           break;
         case 1:
           newArr = this.getMoreComment()
-          // console.log(this.getMoreComment());
           break;
         case 2:
           // newArr.forEach(item => {
@@ -188,15 +187,15 @@ export default {
       }, 3000)
     },
     songItemClick(id) {
-      let info = null
-      info = this.getSongInfo(id)
+      // let info = null
+      // info = this.getSongInfo(id)
 
-      let timer = setInterval(() => {
-        if(info[0]) {
-          this.$EventBus.$emit('playSongs', info)
-          clearInterval(timer)
-        }
-      },100)
+      // let timer = setInterval(() => {
+      //   if(info[0]) {
+      //     this.$EventBus.$emit('playSongs', info)
+      //     clearInterval(timer)
+      //   }
+      // },100)
     },
     playAllSongs(ids) {
 
@@ -244,25 +243,21 @@ export default {
       
       return tracks
     },
-    getSongURL(ids) {
-      let urls = []
-      getSongURL(ids).then( result => {
-        let res = result.data.data
-        if(res.length === 0) {
-          urls[0] = res[0].url
+    // getSongURL(ids) {
+    //   let urls = []
+    //   getSongURL(ids).then( result => {
+    //     let res = result.data.data
+    //     if(res.length === 0) {
+    //       urls[0] = res[0].url
         
-        } else {
-          res.forEach((item, index) => {
-            urls[index] = item.url
-          })
-        }
-        // let audio = document.querySelector('#myAudio')
-        // audio.setAttribute('src', res.url)
-        // audio.load()
-        // audio.play()
-      })
-      return urls
-    },
+    //     } else {
+    //       res.forEach((item, index) => {
+    //         urls[index] = item.url
+    //       })
+    //     }
+    //   })
+    //   return urls
+    // },
     getSubscriber(id, limit, offset) {
       this.collectInfo.splice(0, this.collectInfo.length)
       limit = 20
@@ -293,7 +288,7 @@ export default {
         this.allCommentCount = res.total
         this.$set(this.commentInfo, '0', res.hotComments)
         this.$set(this.commentInfo, '1', obj)
-        this.getCommentCount = res.total
+        this.getCommentCount = res.total < 20 ? res.total : 20
       })
     },
     getPlayListMoreComment(id, limit, offset) {

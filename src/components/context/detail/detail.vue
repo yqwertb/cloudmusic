@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-wrapper page">
+  <div class="detail-wrapper page" >
     <detail-head :headInfo="headInfo"></detail-head>
     <detail-content :contentInfo="contentInfo"></detail-content>
   </div>
@@ -39,14 +39,16 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('scroll', this.$utils.throttle(this.handlerScroll, 300), true)
+    let wrapper = document.querySelector('.detail-wrapper')
+    wrapper.addEventListener('scroll', this.$utils.throttle(this.handlerScroll, 300), true)
   },
   beforeUpdate() {
     this.emitCount = 0
   },
+  beforeDestroy() {
+  },
   methods: {
     handlerScroll(e) {
-      if(e.target.id === 'app_content_sidebar') return
       let restHeight = e.target.scrollHeight - e.target.offsetHeight
       let scroll = e.target.scrollTop - this.initTop
       this.initTop = e.target.scrollTop
